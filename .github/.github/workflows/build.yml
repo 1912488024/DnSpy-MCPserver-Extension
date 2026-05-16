@@ -21,13 +21,10 @@ jobs:
     - name: Build solution
       run: msbuild dnSpy.sln /p:Configuration=Release /p:Platform="Any CPU"
 
-    - name: Build extension
-      run: msbuild "Extensions\Examples\Example1.Extension\Example1.Extension.csproj" /p:Configuration=Release
-
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: dnspy-with-extension
         path: |
-          dnSpy\dnSpy\bin\Release\net48\**\*
-          Extensions\Examples\Example1.Extension\bin\Release\net48\**\*
+          dnSpy\dnSpy\bin\Release\net48\
+          extensions\examples\Example1.Extension\bin\Release\net48\
