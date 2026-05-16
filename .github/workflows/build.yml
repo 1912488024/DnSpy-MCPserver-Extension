@@ -1,22 +1,19 @@
-name: Build dnSpy with MCP Extension
+name: Build dnSpy with MCP Extension (NET48)
 
 on:
   workflow_dispatch:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
     - name: Checkout code with submodules
       uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-        fetch-depth: 0
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v3
@@ -27,17 +24,13 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore dnSpy.sln
 
-    - name: Build entire dnSpy solution
-      run: msbuild dnSpy.sln /p:Configuration=Release /p:Platform="Any CPU" /m /verbosity:minimal
+    - name: Build entire solution (NET48)
+      run: msbuild dnSpy.sln /p:Configuration=Release /p:Platform="Any CPU" /m:1 /verbosity:minimal
 
-    - name: Verify extension was built
-      run: |
-        dir "Extensions\Examples\Example1.Extension\bin\Release\net48\" || echo "Extension not found, but continuing"
-
-    - name: Upload full build artifacts
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: dnSpy-MCP-Full-Build
+        name: dnSpy-MCP-NET48-Build
         path: |
           dnSpy\dnSpy\bin\Release\net48\
           Extensions\Examples\Example1.Extension\bin\Release\net48\
